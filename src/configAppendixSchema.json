@@ -1,0 +1,289 @@
+{
+  "definitions": {
+    "collapsingStrategies": {
+      "type": "string",
+      "enum": [
+        "sponsor",
+        "root"
+      ],
+      "default": "sponsor"
+    },
+    "downlineTypes": {
+      "type": "string",
+      "enum": [
+        "frontline",
+        "group",
+        "network"
+      ]
+    },
+    "downlineTypeFrontline": {
+      "type": "object",
+      "properties": {
+        "minLevel": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 0
+        },
+        "maxLevel": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1,
+          "default": 1
+        },
+        "typeLevels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "minLevel",
+        "maxLevel"
+      ]
+    },
+    "downlineTypeGroup": {
+      "type": "object",
+      "properties": {
+        "minLevel": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 0
+        },
+        "maxLevel": {
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 5,
+          "default": 2
+        },
+        "typeLevels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "minLevel",
+        "maxLevel"
+      ]
+    },
+    "downlineTypeNetwork": {
+      "type": "object",
+      "properties": {
+        "minLevel": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 0
+        },
+        "maxLevel": {
+          "type": "integer",
+          "minimum": 100000,
+          "maximum": 100000,
+          "default": 100000
+        },
+        "typeLevels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "minLevel",
+        "maxLevel"
+      ]
+    }
+  },
+  "title": "Engine Configuration",
+  "type": "object",
+  "properties": {
+    "validity": {
+      "title": "Effective From",
+      "type": "object",
+      "required": [
+        "fromDate"
+      ],
+      "properties": {
+        "fromDate": {
+          "title": "Date",
+          "description": "Specify the date and time when this configuration should be applied",
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "downline": {
+      "title": "Downline",
+      "type": "object",
+      "properties": {
+        "type": {
+          "title": "Select Downline Types",
+          "type": "object",
+          "required": [
+            "list"
+          ],
+          "properties": {
+            "list": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/downlineTypes"
+              },
+              "uniqueItems": true,
+              "default": [
+                "frontline"
+              ]
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "list": {
+                    "contains": {
+                      "const": "frontline"
+                    }
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "frontline": {
+                    "title": "Frontline",
+                    "$ref": "#/definitions/downlineTypeFrontline"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "list": {
+                    "contains": {
+                      "const": "group"
+                    }
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "group": {
+                    "title": "Group",
+                    "$ref": "#/definitions/downlineTypeGroup"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "list": {
+                    "contains": {
+                      "const": "network"
+                    }
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "network": {
+                    "title": "Network",
+                    "$ref": "#/definitions/downlineTypeNetwork"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "collapsingStrategy": {
+          "title": "Downline Collapsing Strategy",
+          "type": "object",
+          "properties": {
+            "clientTypes": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "uniqueItems": true
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "clientTypes": {
+                    "contains": {
+                      "const": "Ambassador"
+                    }
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "Ambassador"
+                ],
+                "properties": {
+                  "Ambassador": {
+                    "title": "Downline Collapsing Strategy for Ambassador",
+                    "$ref": "#/definitions/collapsingStrategies"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "clientTypes": {
+                    "contains": {
+                      "const": "Influencer"
+                    }
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "Influencer"
+                ],
+                "properties": {
+                  "Influencer": {
+                    "title": "Downline Collapsing Strategy for Influencer",
+                    "$ref": "#/definitions/collapsingStrategies"
+                  }
+                }
+              }
+            },
+
+            {
+              "if": {
+                "properties": {
+                  "clientTypes": {
+                    "contains": {
+                      "const": "Customer"
+                    }
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "Customer"
+                ],
+                "properties": {
+                  "Customer": {
+                    "title": "Downline Collapsing Strategy for Customer",
+                    "$ref": "#/definitions/collapsingStrategies"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}
