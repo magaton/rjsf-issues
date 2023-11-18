@@ -4,7 +4,7 @@ import React, { FC, useEffect, useMemo, useState } from "react";
 import { FormsUtility } from "../utils/forms-utility";
 
 export const TypeLevelsCustomSelect: FC<WidgetProps> = ({ options, registry, formContext, ...props }) => {
-  //console.log("######## TypeLevelsCustomSelect started");
+
   const { SelectWidget } = registry.widgets;
   const { pathToMinLevel, pathToMaxLevel, pathToClientTypes, pathToSponsorClientTypes } = options;
   const [endOfRange, setEndOfRange] = useState<number | undefined>(undefined);
@@ -40,11 +40,6 @@ export const TypeLevelsCustomSelect: FC<WidgetProps> = ({ options, registry, for
       }
     }
   }, [enumOptions, formContext, isEdited, options.setAllOptionsByDefault, props.id]);
-
-  useEffect(() => { 
-    props.onChange(formContext.formData);
-    console.log("########## TypeLevelsCustomSelect TRIGGER UPDATE !!!!!!!!!!!!")},[]
-  );
 
   useEffect(() => {
     if (isNil(endOfRange) || endOfRange > 5) {

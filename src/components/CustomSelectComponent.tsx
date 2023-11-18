@@ -30,31 +30,13 @@ export const CustomSelect: FC<WidgetProps> = ({ options, formContext, registry, 
     return get(formContext.formData, options.dependsOn, []);
   }, [formContext.formData, options.dependsOn, options.pathToReplaceableValue]);
 
-  useEffect(() => { 
-    props.onChange(formContext.formData);
-    console.log("########## CustomSelect TRIGGER UPDATE !!!!!!!!!!!!")},[]
-  );
-
 
   useEffect(() => {
     if (!!options.setAllOptionsByDefault && !isEdited && !isEmpty(formContext.formData)) {
       const fieldData = get(formContext.formData, FormsUtility.getPathFromId(props.id));
-
-      //if (options.path === "downline.collapsingStrategy.clientTypes" || options.path === "downline.recruitmentPolicy.clientTypes") {
-      console.log("@@@@@ useEffect1 CustomSelect path", options.path);
-      console.log("@@@@@ useEffect1 CustomSelect fieldData", fieldData);
-      //}
       let newFormData = formContext.formData;
-      //if (options.path === "downline.collapsingStrategy.clientTypes" || options.path === "downline.recruitmentPolicy.clientTypes") {
-      //console.log("@@@@@ useEffect1 CustomSelect path", options.path);
-      //console.log("@@@@@ useEffect1 CustomSelect newFormData", newFormData);
-      //}
       set(newFormData, FormsUtility.getPathFromId(props.id), isNil(fieldData) || isEmpty(fieldData) ? enumOptions : fieldData);
       formContext.setFormData({ ...newFormData });
-      //if (options.path === "downline.collapsingStrategy.clientTypes" || options.path === "downline.recruitmentPolicy.clientTypes") {
-      //console.log("@@@@@ useEffect1 CustomSelect path", options.path);
-      //console.log("@@@@@ useEffect1 CustomSelect formContext.formData", formContext.formData);
-      //}
       if (!isEmpty(enumOptions)) {
         setIsEdited(true);
       }
@@ -66,18 +48,9 @@ export const CustomSelect: FC<WidgetProps> = ({ options, formContext, registry, 
   useEffect(() => {
     if (shouldHideWidget && !isNil(enumOptions) && !isEmpty(formContext.formData)) {
       let newFormData = formContext.formData;
-
-      //if (options.path === "downline.collapsingStrategy.clientTypes" || options.path === "downline.recruitmentPolicy.clientTypes") {
-      console.log("###### useEffect2 CustomSelect path", options.path);
-      console.log("###### useEffect2 CustomSelect newFormData", newFormData);
-      //}
       const path = FormsUtility.getPathFromId(props.id);
       set(newFormData, path, enumOptions);
       formContext.setFormData({ ...newFormData });
-
-      //if (options.path === "downline.collapsingStrategy.clientTypes" || options.path === "downline.recruitmentPolicy.clientTypes") {
-      //console.log("###### useEffect2 CustomSelect formContext.formData", formContext.formData);
-      //}
     }
   }, [enumOptions, formContext, props.id, shouldHideWidget]);
 
@@ -85,20 +58,9 @@ export const CustomSelect: FC<WidgetProps> = ({ options, formContext, registry, 
     return null;
   }
 
-  if (options.returnLengthOnly != null && options.returnLengthOnly === true) {
-    enumOptions = [enumOptions.length];
-  }
-
   const customOptions = { ...options, enumOptions: FormsUtility.getFilterOptions(enumOptions) };
 
-  
 
-  
-
-  //console.log("@@@@@ CustomSelect path:", options.path);
-  //if (options.path === "downline.collapsingStrategy.clientTypes" || options.path === "downline.recruitmentPolicy.clientTypes") {
-  console.log("$$$$$$$$$$ CustomSelect Render customOptions", customOptions.enumOptions);
-  //}
   return (
     <div style={{ all: 'inherit', display: shouldHideWidget ? 'none' : 'inherit' }}>
       <SelectWidget
