@@ -4,10 +4,11 @@ import Form from '@rjsf/mui';
 import validator from '@rjsf/validator-ajv8';
 import { CustomSelect } from "./CustomSelectComponent";
 import { TypeLevelsCustomSelect } from "./TypeLevelsSelectComponent";
+import { CustomHidden } from "./CustomHiddenComponent";
 // change the schemas if you want to see appendix and internationalization screens
-const schema: RJSFSchema = require("../configAppendixSchema.json");
+const schema: RJSFSchema = require("../configSchema.json");
 const initialFormData = require("../formData.json");
-const uiSchema = require("../configAppendixUISchema.json"); // Import the UI schema from the file system
+const uiSchema = require("../configUISchema.json"); // Import the UI schema from the file system
 
 
 const ConfigFormComponent: React.FC = () => {
@@ -19,7 +20,8 @@ const ConfigFormComponent: React.FC = () => {
     };
     const widgets: RegistryWidgetsType = {
         CustomSelectComponent: CustomSelect,
-        TypeLevelsCustomSelectComponent: TypeLevelsCustomSelect
+        TypeLevelsCustomSelectComponent: TypeLevelsCustomSelect,
+        CustomHiddenComponent: CustomHidden
     };
     console.log("ConfigFormComponent formData", formData);
     return (

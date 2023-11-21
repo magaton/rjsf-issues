@@ -2,7 +2,6 @@ import { WidgetProps} from "@rjsf/utils";
 import { get, intersection, isArray, isEmpty, isNil, replace, set } from "lodash";
 import React, { FC, useEffect, useMemo, useState } from "react";
 import { FormsUtility } from "../utils/forms-utility";
-import { log } from "console";
 
 export const CustomSelect: FC<WidgetProps> = ({ options, formContext, registry, ...props }) => {
   //console.log("######## CustomSelect STARTED path", options.path)
@@ -33,9 +32,9 @@ export const CustomSelect: FC<WidgetProps> = ({ options, formContext, registry, 
 
   useEffect(() => {
     if (!!options.setAllOptionsByDefault && !isEdited && !isEmpty(formContext.formData)) {
-      const fieldData = get(formContext.formData, FormsUtility.getPathFromId(props.id));
-      let newFormData = formContext.formData;
-      set(newFormData, FormsUtility.getPathFromId(props.id), isNil(fieldData) || isEmpty(fieldData) ? enumOptions : fieldData);
+      const fieldData = get(formContext.formData, FormsUtility.transformIdToPath(props.id));
+      let newFormData = {...formContext.formData};
+      set(newFormData, FormsUtility.transformIdToPath(props.id), isNil(fieldData) || isEmpty(fieldData) ? enumOptions : fieldData);
       formContext.setFormData({ ...newFormData });
       if (!isEmpty(enumOptions)) {
         setIsEdited(true);
@@ -47,8 +46,8 @@ export const CustomSelect: FC<WidgetProps> = ({ options, formContext, registry, 
 
   useEffect(() => {
     if (shouldHideWidget && !isNil(enumOptions) && !isEmpty(formContext.formData)) {
-      let newFormData = formContext.formData;
-      const path = FormsUtility.getPathFromId(props.id);
+      let newFormData = {...formContext.formData};
+      const path = FormsUtility.transformIdToPath(props.id);
       set(newFormData, path, enumOptions);
       formContext.setFormData({ ...newFormData });
     }
@@ -66,7 +65,6 @@ export const CustomSelect: FC<WidgetProps> = ({ options, formContext, registry, 
       <SelectWidget
         {...props}
         options={customOptions}
-
         registry={registry}
         multiple={!!options.multiSelect || props.multiple}
       />

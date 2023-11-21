@@ -1,0 +1,17 @@
+{
+
+    "client": {
+        "isCompensationPlanMLM":{
+            "ui:widget": "CustomHiddenComponent",
+            "ui:options": {
+                "dependsOn": "compensationPlan.type"
+            }
+        },
+        "isCompensationPlanInfluencerMarketing":{
+            "ui:widget": "CustomHiddenComponent",
+            "ui:options": {
+                "dependsOn": "compensationPlan.type"
+            }
+        }
+    }
+}

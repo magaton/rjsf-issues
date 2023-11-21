@@ -1,13 +1,1 @@
-{
-    "client": {
-        "sponsorTypes": [
-            "Ambassador",
-            "Influencer"
-        ],
-        "types": [
-            "Ambassador",
-            "Influencer",
-            "Customer"
-        ]
-    }
-}
+{}

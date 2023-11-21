@@ -1,0 +1,197 @@
+{
+    "definitions": {
+        "compensationPlanType": {
+            "type": "string",
+            "title": "Compensation Plan Type",
+            "oneOf": [
+                {
+                    "type": "string",
+                    "enum": [
+                        "influencerMarketing"
+                    ],
+                    "title": "Influencer Marketing"
+                },
+                {
+                    "type": "string",
+                    "enum": [
+                        "mlm"
+                    ],
+                    "title": "Multi Level Marketing"
+                }
+            ],
+            "default": "influencerMarketing"
+        },
+        "influencerMarketingClientTypes": {
+            "type": "string",
+            "oneOf": [
+                {
+                    "type": "string",
+                    "enum": [
+                        "MacroInfluencer"
+                    ],
+                    "title": "Macro Influencer"
+                },
+                {
+                    "type": "string",
+                    "enum": [
+                        "Influencer"
+                    ],
+                    "title": "Influencer"
+                },
+                {
+                    "type": "string",
+                    "enum": [
+                        "MicroInfluencer"
+                    ],
+                    "title": "Micro Influencer"
+                },
+                {
+                    "type": "string",
+                    "enum": [
+                        "Member"
+                    ],
+                    "title": "Member"
+                },
+                {
+                    "type": "string",
+                    "enum": [
+                        "Wholesale"
+                    ],
+                    "title": "Wholesale Customer"
+                },
+                {
+                    "type": "string",
+                    "enum": [
+                        "Customer"
+                    ],
+                    "title": "Retail Customer"
+                }
+            ]
+        },
+        "mlmClientTypes": {
+            "type": "string",
+            "oneOf": [
+                {
+                    "type": "string",
+                    "enum": [
+                        "Ambassador"
+                    ],
+                    "title": "Ambassador"
+                },
+                {
+                    "type": "string",
+                    "enum": [
+                        "MacroInfluencer"
+                    ],
+                    "title": "Macro Influencer"
+                },
+                {
+                    "type": "string",
+                    "enum": [
+                        "Influencer"
+                    ],
+                    "title": "Influencer"
+                },
+                {
+                    "type": "string",
+                    "enum": [
+                        "MicroInfluencer"
+                    ],
+                    "title": "Micro Influencer"
+                },
+                {
+                    "type": "string",
+                    "enum": [
+                        "Member"
+                    ],
+                    "title": "Member"
+                },
+                {
+                    "type": "string",
+                    "enum": [
+                        "Wholesale"
+                    ],
+                    "title": "Wholesale Customer"
+                },
+                {
+                    "type": "string",
+                    "enum": [
+                        "Customer"
+                    ],
+                    "title": "Retail Customer"
+                }
+            ]
+        }
+    },
+    "$id": "config",
+    "title": "Global Configuration",
+    "type": "object",
+    "properties": {
+        "compensationPlan": {
+            "title": "Compensation Plan",
+            "description": "Specify Compensation Plan Type",
+            "type": "object",
+            "properties": {
+                "type": {
+                    "$ref": "#/definitions/compensationPlanType"
+                }
+            }
+        },
+        "client": {
+            "title": "Client",
+            "type": "object",
+            "properties": {
+                "isCompensationPlanMLM": {
+                    "type": "string"
+                },
+                "isCompensationPlanInfluencerMarketing": {
+                    "type": "string"
+                }
+            },
+            "dependencies":{
+                "isCompensationPlanInfluencerMarketing":{
+                    "required": [
+                        "types"
+                    ],
+                    "properties": {
+                        "types": {
+                            "title": "Client Types for Influencer Marketing",
+                            "description": "Specify Client Types for Influencer Marketing",
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/influencerMarketingClientTypes"
+                            },
+                            "uniqueItems": true,
+                            "default": [
+                                "Influencer",
+                                "Customer"
+                            ]
+                        }
+                    }
+                },
+                "isCompensationPlanMLM":{
+                    "required": [
+                        "types"
+                    ],
+                    "properties": {
+                        "types": {
+                            "title": "Client Types for MLM",
+                            "description": "Specify Client Types for MLM",
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/mlmClientTypes"
+                            },
+                            "uniqueItems": true,
+                            "default": [
+                                "Ambassador",
+                                "Influencer",
+                                "Customer"
+                            ]
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+}

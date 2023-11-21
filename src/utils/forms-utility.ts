@@ -1,4 +1,4 @@
-import { difference, flatMap, flatMapDeep, intersection, isEmpty, isNil, isPlainObject, join, map, pick, range, slice, values } from "lodash";
+import { get, last, omit, keys, difference, flatMap, flatMapDeep, intersection, isEmpty, isNil, isPlainObject, join, map, pick, range, slice, values, has } from "lodash";
 
 export class FormsUtility {
   private static getKeys (obj: any, parentKey?: string): string[] {
@@ -58,12 +58,40 @@ export class FormsUtility {
     return result;
   }    
 
-  static getPathFromId (id: string): string  {
-    const parts = id.split('_');
+  static transformIdToPath (id: string): string  {
+    const parts = id.split("_");
     if (parts.length < 2) {
       return id;
     }
     const transformedString = join(slice(parts, 1), '.');
     return transformedString;
+  }
+
+  static getFieldNameFromPath(id: string, delimiter: string): string {
+    // Split the input string by commas
+    const parts = id.split(delimiter);
+    if (parts.length < 1) {
+      return id;
+    }
+    // Get the last element of the array (which is the last substring)
+    return parts[parts.length - 1].trim();
+  }
+
+  static getParentPath(inputPath: string): string {
+    const pathSegments = inputPath.split('.');
+    return pathSegments.slice(0, -1).join('.');
+  }  
+
+  static findSiblingsWithPrefix (inputPath: string, keyword: string, formData: any): string[] {
+    if (isEmpty(formData) || !has(formData, inputPath)) {
+      return [];
+    }
+    const pathSegments = inputPath.split('.');
+    const parentPath = pathSegments.slice(0, -1).join('.');
+    const propertyName = last(pathSegments);
+    const siblings = omit(get(formData, parentPath, {}), propertyName || '');
+    console.log("inputPath: %s, pathSegments: %s,  parentPath: %s, propertyName: %s", inputPath, pathSegments, parentPath, propertyName)
+    const siblingKeys = keys(siblings).filter((sibling) => sibling.startsWith(keyword));
+    return siblingKeys.map((key) => `${parentPath}.${key}`);
   }
 }

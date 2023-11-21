@@ -30,9 +30,9 @@ export const TypeLevelsCustomSelect: FC<WidgetProps> = ({ options, registry, for
 
   useEffect(() => {
     if (!!options.setAllOptionsByDefault && !isEdited && !isEmpty(formContext.formData)) {
-      const fieldData = get(formContext.formData, FormsUtility.getPathFromId(props.id));
-      let newFormData = formContext.formData;
-      set(newFormData, FormsUtility.getPathFromId(props.id), isNil(fieldData) || isEmpty(fieldData) ? enumOptions : fieldData);
+      const fieldData = get(formContext.formData, FormsUtility.transformIdToPath(props.id));
+      let newFormData = {...formContext.formData};
+      set(newFormData, FormsUtility.transformIdToPath(props.id), isNil(fieldData) || isEmpty(fieldData) ? enumOptions : fieldData);
       formContext.setFormData({ ...newFormData });
       //console.log("@@@@@ TypeLevelsCustomSelect formContext", formContext.formData)
       if (!isEmpty(enumOptions)) {
@@ -54,13 +54,13 @@ export const TypeLevelsCustomSelect: FC<WidgetProps> = ({ options, registry, for
   useEffect(() => {
     const minLevel = get(formContext.formData, pathToMinLevel as string);
     const maxLevel = get(formContext.formData, pathToMaxLevel as string);
-    const fieldData = get(formContext.formData, FormsUtility.getPathFromId(props.id));
-    let newFormData = formContext.formData;
+    const fieldData = get(formContext.formData, FormsUtility.transformIdToPath(props.id));
+    let newFormData = {...formContext.formData};
 
     if ((minLevel !== previousMinLevel || maxLevel !== previousMaxLevel) && isEdited) {
-      set(newFormData, FormsUtility.getPathFromId(props.id), enumOptions);
+      set(newFormData, FormsUtility.transformIdToPath(props.id), enumOptions);
     } else {
-      set(newFormData, FormsUtility.getPathFromId(props.id), fieldData);
+      set(newFormData, FormsUtility.transformIdToPath(props.id), fieldData);
     }
     formContext.setFormData({ ...newFormData });
     setPreviousMinLevel(minLevel);

@@ -9,7 +9,6 @@
                 "ui:title": " ",
                 "ui:widget": "CustomSelectComponent",
                 "ui:options": {
-                    "path":"downline.collapsingStrategy.clientTypes",
                     "setAllOptionsByDefault": true,
                     "dependsOn": [
                         "client.types"
@@ -29,7 +28,6 @@
             "default": {
                 "ui:widget": "CustomSelectComponent",
                 "ui:options": {
-                    "path":"downline.default",
                     "dependsOn": "downline.type.list"
                 }
             },
