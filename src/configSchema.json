@@ -1,5 +1,88 @@
 {
     "definitions": {
+        "currencies": {
+            "enum": [
+                "USD",
+                "EUR",
+                "GBP",
+                "DKK"
+            ]
+        },
+        "paymentProviders": {
+            "enum": [
+                "PayQuicker",
+                "PayPal",
+                "Wise",
+                "Revolut"
+            ]
+        },
+        "periodTypes": {
+            "enum": [
+                "Day",
+                "Week",
+                "Month",
+                "Year"
+            ]
+        },
+        "timezones": {
+            "enum": [
+                "UTC",
+                "GMT",
+                "CET",
+                "PST"
+            ]
+        },
+        "currencySupportedByPaymentProviders": {
+            "type": "object",
+            "properties": {
+                "paymentProviders": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "$ref": "#/definitions/paymentProviders"
+                    },
+                    "uniqueItems": true
+                }
+            },
+            "required": [
+                "paymentProviders"
+            ]
+        },
+        "exchangeRateRefreshFrequency": {
+            "type": "string",
+            "title": "Exchange Rate Refresh Frequency",
+            "oneOf": [
+                {
+                    "type": "string",
+                    "enum": [
+                        "monthly"
+                    ],
+                    "title": "Monthly"
+                },
+                {
+                    "type": "string",
+                    "enum": [
+                        "weekly"
+                    ],
+                    "title": "Weekly"
+                },
+                {
+                    "type": "string",
+                    "enum": [
+                        "daily"
+                    ],
+                    "title": "Daily"
+                },
+                {
+                    "type": "string",
+                    "enum": [
+                        "hourly"
+                    ],
+                    "title": "Hourly"
+                }
+            ],
+            "default": "daily"
+        },
         "compensationPlanType": {
             "type": "string",
             "title": "Compensation Plan Type",
@@ -124,7 +207,8 @@
         }
     },
     "$id": "config",
-    "title": "Global Configuration",
+    "title": "GEARS Commission Engine Global Configuration",
+    "description": "Here you can define all the global parameters for GEARS Commission Engine",
     "type": "object",
     "properties": {
         "compensationPlan": {
@@ -137,6 +221,264 @@
                 }
             }
         },
+        "payment": {
+            "title": "Payment",
+            "type": "object",
+            "properties": {
+                "provider": {
+                    "type": "object",
+                    "title": "Payment Provider",
+                    "required": [
+                        "list",
+                        "default"
+                    ],
+                    "properties": {
+                        "list": {
+                            "title": "Payment Provider List",
+                            "description": "Select Payment Providers",
+                            "type": "array",
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "$ref": "#/definitions/paymentProviders"
+                            },
+                            "default": [
+                                "PayQuicker"
+                            ]
+                        },
+                        "default": {
+                            "title": "Default Payment Provider",
+                            "description": "Specify default payment provider",
+                            "type": "string",
+                            "$ref": "#/definitions/paymentProviders",
+                            "default": "PayQuicker"
+                        }
+                    }
+                }
+            }
+        },
+        "currency": {
+            "title": "Currency",
+            "type": "object",
+            "required": [
+                "list",
+                "default"
+            ],
+            "properties": {
+                "list": {
+                    "title": "Currencies",
+                    "description": "Specify Currencies",
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "$ref": "#/definitions/currencies"
+                    },
+                    "default": [
+                        "USD"
+                    ],
+                    "uniqueItems": true
+                },
+                "default": {
+                    "title": "Default Currency",
+                    "description": "Specify default currency",
+                    "type": "string",
+                    "$ref": "#/definitions/currencies",
+                    "default": "USD"
+                },
+                "isMulticurrencyRequired": {
+                    "title": "Hidden field",
+                    "type": "string"
+                }
+            },
+            "allOf": [
+                {
+                    "if": {
+                        "properties": {
+                            "list": {
+                                "contains": {
+                                    "const": "USD"
+                                }
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "USD": {
+                                "title": "Payment Providers supporting USD",
+                                "$ref": "#/definitions/currencySupportedByPaymentProviders"
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "list": {
+                                "contains": {
+                                    "const": "EUR"
+                                }
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "EUR": {
+                                "title": "Payment Providers supporting EUR",
+                                "$ref": "#/definitions/currencySupportedByPaymentProviders"
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "list": {
+                                "contains": {
+                                    "const": "GBP"
+                                }
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "GBP": {
+                                "title": "Payment Providers supporting GBP",
+                                "$ref": "#/definitions/currencySupportedByPaymentProviders"
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "list": {
+                                "contains": {
+                                    "const": "DKK"
+                                }
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "DKK": {
+                                "title": "Payment Providers supporting DKK",
+                                "$ref": "#/definitions/currencySupportedByPaymentProviders"
+                            }
+                        }
+                    }
+                }
+            ],
+            "dependencies": {
+                "isMulticurrencyRequired": {
+                    "properties": {
+                        "exchangeRate": {
+                            "title": "Exchange Rate",
+                            "type": "object",
+                            "required": [
+                                "mode"
+                            ],
+                            "properties": {
+                                "mode": {
+                                    "title": "Mode",
+                                    "description": "Specify Exchange Rate Mode (Automatic or Manual)",
+                                    "type": "string",
+                                    "oneOf": [
+                                        {
+                                            "const": "manual",
+                                            "title": "Manual"
+                                        },
+                                        {
+                                            "const": "auto",
+                                            "title": "Automatic"
+                                        }
+                                    ]
+                                },
+                                "isExchangeRateAuto":{
+                                    "type": "string"
+                                }
+                            },
+                            "dependencies":{
+                                "isExchangeRateAuto":{
+                                    "properties": {
+                                        "exchangeRateRefreshFrequency": {
+                                            "$ref": "#/definitions/exchangeRateRefreshFrequency"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "period": {
+            "title": "Period",
+            "type": "object",
+            "required": [
+                "types",
+                "timezone",
+                "payDateOffsetInDays"
+            ],
+            "properties": {
+                "types": {
+                    "title": "Period Types",
+                    "description": "Specify Period Types",
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "$ref": "#/definitions/periodTypes"
+                    },
+                    "default": [
+                        "Month"
+                    ],
+                    "uniqueItems": true
+                },
+                "timezone": {
+                    "title": "Timezone",
+                    "description": "Specify timezone",
+                    "type": "string",
+                    "$ref": "#/definitions/timezones",
+                    "default": "PST"
+                },
+                "payDateOffsetInDays": {
+                    "title": "Pay Date Offset In Days",
+                    "description": "Specify Pay Date Offset In Days",
+                    "type": "integer",
+                    "default": 3,
+                    "minimum": 0,
+                    "maximum": 30
+                }
+            },
+            "allOf": [
+                {
+                    "if": {
+                        "properties": {
+                            "types": {
+                                "contains": {
+                                    "const": "Week"
+                                }
+                            }
+                        }
+                    },
+                    "then": {
+                        "required": [
+                            "weekStarts"
+                        ],
+                        "properties": {
+                            "weekStarts": {
+                                "title": "Week starts",
+                                "type": "string",
+                                "enum": [
+                                    "Saturday",
+                                    "Sunday",
+                                    "Monday"
+                                ]
+                            }
+                        }
+                    }
+                }
+            ]
+        },
         "client": {
             "title": "Client",
             "type": "object",
@@ -146,6 +488,109 @@
                 },
                 "isCompensationPlanInfluencerMarketing": {
                     "type": "string"
+                },
+                "sponsorTypes": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "Ambassador",
+                            "MacroInfluencer",
+                            "Influencer",
+                            "MicroInfluencer",
+                            "Apprentice"
+                        ]
+                    },
+                    "uniqueItems": true,
+                    "default": [
+                        "Ambassador",
+                        "MacroInfluencer",
+                        "Influencer",
+                        "MicroInfluencer",
+                        "Apprentice"
+                    ]
+                },
+                "earnerTypes": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "Ambassador",
+                            "MacroInfluencer",
+                            "Influencer",
+                            "MicroInfluencer"
+                        ]
+                    },
+                    "uniqueItems": true,
+                    "default": [
+                        "Ambassador",
+                        "MacroInfluencer",
+                        "Influencer",
+                        "MicroInfluencer"
+                    ]
+                },
+                "subscriberTypes": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "Ambassador",
+                            "MacroInfluencer",
+                            "Influencer",
+                            "MicroInfluencer",
+                            "Member"
+                        ]
+                    },
+                    "uniqueItems": true,
+                    "default": [
+                        "Ambassador",
+                        "MacroInfluencer",
+                        "Influencer",
+                        "MicroInfluencer",
+                        "Member"
+                    ]
+                },
+                "ambassadorTypes": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "Ambassador"
+                        ]
+                    },
+                    "uniqueItems": true,
+                    "default": [
+                        "Ambassador"
+                    ]
+                },
+                "customerTypes": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "Customer",
+                            "Wholesale"
+                        ]
+                    },
+                    "uniqueItems": true,
+                    "default": [
+                        "Customer"
+                    ]
+                },
+                "influencerTypes": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "MacroInfluencer",
+                            "Influencer",
+                            "MicroInfluencer"
+                        ]
+                    },
+                    "uniqueItems": true,
+                    "default": [
+                        "Influencer"
+                    ]
                 }
             },
             "dependencies":{
@@ -187,11 +632,167 @@
                                 "Influencer",
                                 "Customer"
                             ]
+                        },
+                        "inactivityRules": {
+                            "title": "Inactivity Rules",
+                            "description": "Specify Inactivity Rules",
+                            "properties": {
+                                "earnerTypes": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    },
+                                    "uniqueItems": true
+                                }
+                            },
+                            "allOf": [
+                                {
+                                    "if": {
+                                        "properties": {
+                                            "earnerTypes": {
+                                                "contains": {
+                                                    "const": "Ambassador"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "then": {
+                                        "properties": {
+                                            "Ambassador": {
+                                                "title": "Inactivity Rule (no sales or hires) for Ambassadors",
+                                                "type": "object",
+                                                "required": [
+                                                    "period"
+                                                ],
+                                                "properties": {
+                                                    "period": {
+                                                        "title": "Period in Months",
+                                                        "type": "integer",
+                                                        "default": 12
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "if": {
+                                        "properties": {
+                                            "earnerTypes": {
+                                                "contains": {
+                                                    "const": "Influencer"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "then": {
+                                        "required": [
+                                            "Influencer"
+                                        ],
+                                        "properties": {
+                                            "Influencer": {
+                                                "title": "Inactivity Rule (no sales or hires) for Influencers",
+                                                "type": "object",
+                                                "required": [
+                                                    "period"
+                                                ],
+                                                "properties": {
+                                                    "period": {
+                                                        "title": "Period in Months",
+                                                        "type": "integer",
+                                                        "default": 12
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "if": {
+                                        "properties": {
+                                            "earnerTypes": {
+                                                "contains": {
+                                                    "const": "MacroInfluencer"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "then": {
+                                        "required": [
+                                            "MacroInfluencer"
+                                        ],
+                                        "properties": {
+                                            "MacroInfluencer": {
+                                                "title": "Inactivity Rule (no sales or hires) for Macro Influencers",
+                                                "type": "object",
+                                                "required": [
+                                                    "period"
+                                                ],
+                                                "properties": {
+                                                    "period": {
+                                                        "title": "Period in Months",
+                                                        "type": "integer",
+                                                        "default": 12
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "if": {
+                                        "properties": {
+                                            "earnerTypes": {
+                                                "contains": {
+                                                    "const": "MicroInfluencer"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "then": {
+                                        "required": [
+                                            "MicroInfluencer"
+                                        ],
+                                        "properties": {
+                                            "MicroInfluencer": {
+                                                "title": "Inactivity Rule (no sales or hires) for Micro Influencers",
+                                                "type": "object",
+                                                "required": [
+                                                    "period"
+                                                ],
+                                                "properties": {
+                                                    "period": {
+                                                        "title": "Period in Months",
+                                                        "type": "integer",
+                                                        "default": 12
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
             }
 
+        },         
+        "kpi": {
+            "title": "KPI",
+            "type": "object",
+            "required": [
+                "period"
+            ],
+            "properties": {
+                "period": {
+                    "title": "Period",
+                    "description": "Specify KPI Period",
+                    "type": "string",
+                    "ref": "#/definitions/periodTypes",
+                    "default": "Month"
+                }
+            }
         }
     }
 }

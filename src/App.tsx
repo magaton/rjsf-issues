@@ -1,11 +1,11 @@
 import React from "react";
 import "./App.css";
-import ConfigFormComponent from "./components/ConfigFormComponent";
+import DynamicFormComponent from "./components/DynamicFormComponent";
 
 function App() {
   return (
     <div className="App">
-      <ConfigFormComponent />
+      <DynamicFormComponent />
     </div>
   );
 }

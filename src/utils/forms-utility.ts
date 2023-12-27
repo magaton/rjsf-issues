@@ -90,7 +90,7 @@ export class FormsUtility {
     const parentPath = pathSegments.slice(0, -1).join('.');
     const propertyName = last(pathSegments);
     const siblings = omit(get(formData, parentPath, {}), propertyName || '');
-    console.log("inputPath: %s, pathSegments: %s,  parentPath: %s, propertyName: %s", inputPath, pathSegments, parentPath, propertyName)
+    //console.log("inputPath: %s, pathSegments: %s,  parentPath: %s, propertyName: %s", inputPath, pathSegments, parentPath, propertyName)
     const siblingKeys = keys(siblings).filter((sibling) => sibling.startsWith(keyword));
     return siblingKeys.map((key) => `${parentPath}.${key}`);
   }

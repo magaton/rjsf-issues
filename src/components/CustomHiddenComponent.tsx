@@ -8,7 +8,7 @@ export const CustomHidden: FC<WidgetProps> = ({ options, registry, formContext, 
     
     // super ugly, refactor later
     useEffect(() => {
-        let newFormData = {...formContext.formData};
+        let newFormData = formContext.formData;
         console.log("CustomHidden newFormData", newFormData)
         // get the source field name
         const fieldName= FormsUtility.getFieldNameFromPath(props.id, "_");

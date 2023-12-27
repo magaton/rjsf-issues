@@ -1,5 +1,75 @@
 {
-
+    "payment": {
+        "provider": {
+            "default": {
+                "ui:widget": "CustomSelectComponent",
+                "ui:options": {
+                    "dependsOn": "payment.provider.list"
+                }
+            }
+        }
+    },
+    "currency": {
+        "default": {
+            "ui:widget": "CustomSelectComponent",
+            "ui:options": {
+                "dependsOn": "currency.list"
+            }
+        },
+        "isMulticurrencyRequired": {
+            "ui:widget": "CustomHiddenComponent",
+            "ui:options": {
+                "dependsOn": "currency.list"
+            }
+        },
+        "exchangeRate": {
+            "mode": {
+                "ui:widget": "select"
+            },
+            "isExchangeRateAuto":{
+                "ui:widget": "CustomHiddenComponent",
+                "ui:options": {
+                    "dependsOn": "currency.exchangeRate.mode"
+                }
+            }    
+        },
+        "USD": {
+            "paymentProviders": {
+                "ui:widget": "CustomSelectComponent",
+                "ui:options": {
+                    "dependsOn": "payment.provider.list",
+                    "multiSelect": true
+                }
+            }
+        },
+        "EUR": {
+            "paymentProviders": {
+                "ui:widget": "CustomSelectComponent",
+                "ui:options": {
+                    "dependsOn": "payment.provider.list",
+                    "multiSelect": true
+                }
+            }
+        },
+        "GBP": {
+            "paymentProviders": {
+                "ui:widget": "CustomSelectComponent",
+                "ui:options": {
+                    "dependsOn": "payment.provider.list",
+                    "multiSelect": true
+                }
+            }
+        },
+        "DKK": {
+            "paymentProviders": {
+                "ui:widget": "CustomSelectComponent",
+                "ui:options": {
+                    "dependsOn": "payment.provider.list",
+                    "multiSelect": true
+                }
+            }
+        }
+    },
     "client": {
         "isCompensationPlanMLM":{
             "ui:widget": "CustomHiddenComponent",
@@ -11,6 +81,44 @@
             "ui:widget": "CustomHiddenComponent",
             "ui:options": {
                 "dependsOn": "compensationPlan.type"
+            }
+        },
+        "sponsorTypes": {
+            "ui:widget": "hidden"
+        },
+        "subscriberTypes": {
+            "ui:widget": "hidden"
+        },
+        "earnerTypes": {
+            "ui:widget": "hidden"
+        },
+        "ambassadorTypes": {
+            "ui:widget": "hidden"
+        },
+        "influencerTypes": {
+            "ui:widget": "hidden"
+        },
+        "customerTypes": {
+            "ui:widget": "hidden"
+        },
+        "inactivityRules":{
+            "earnerTypes":{
+            "ui:widget": "CustomSelectComponent",
+            "ui:options": {
+                "dependsOn": [
+                    "client.types",
+                    "client.earnerTypes"
+                ],
+                "hideWidget": true
+            }
+        }
+        }
+    },
+    "kpi": {
+        "period": {
+            "ui:widget": "CustomSelectComponent",
+            "ui:options": {
+                "dependsOn": "period.types"
             }
         }
     }
