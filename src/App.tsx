@@ -1,6 +1,6 @@
 import React from "react";
 import "./App.css";
-import DynamicFormComponent from "./components/DynamicFormComponent";
+import DynamicFormComponent from "./components/ConfigFormComponent";
 
 function App() {
   return (

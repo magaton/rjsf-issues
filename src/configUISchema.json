@@ -16,22 +16,16 @@
                 "dependsOn": "currency.list"
             }
         },
-        "isMulticurrencyRequired": {
-            "ui:widget": "CustomHiddenComponent",
-            "ui:options": {
-                "dependsOn": "currency.list"
-            }
+        "$isMulticurrencyRequired": {
+            "ui:widget": "hidden"
         },
         "exchangeRate": {
             "mode": {
                 "ui:widget": "select"
             },
-            "isExchangeRateAuto":{
-                "ui:widget": "CustomHiddenComponent",
-                "ui:options": {
-                    "dependsOn": "currency.exchangeRate.mode"
-                }
-            }    
+            "$isExchangeRateAuto": {
+                "ui:widget": "hidden"
+            }
         },
         "USD": {
             "paymentProviders": {
@@ -71,17 +65,11 @@
         }
     },
     "client": {
-        "isCompensationPlanMLM":{
-            "ui:widget": "CustomHiddenComponent",
-            "ui:options": {
-                "dependsOn": "compensationPlan.type"
-            }
+        "$isCompensationPlanMLM": {
+            "ui:widget": "hidden"
         },
-        "isCompensationPlanInfluencerMarketing":{
-            "ui:widget": "CustomHiddenComponent",
-            "ui:options": {
-                "dependsOn": "compensationPlan.type"
-            }
+        "$isCompensationPlanInfluencerMarketing": {
+            "ui:widget": "hidden"
         },
         "sponsorTypes": {
             "ui:widget": "hidden"
@@ -100,18 +88,6 @@
         },
         "customerTypes": {
             "ui:widget": "hidden"
-        },
-        "inactivityRules":{
-            "earnerTypes":{
-            "ui:widget": "CustomSelectComponent",
-            "ui:options": {
-                "dependsOn": [
-                    "client.types",
-                    "client.earnerTypes"
-                ],
-                "hideWidget": true
-            }
-        }
         }
     },
     "kpi": {
