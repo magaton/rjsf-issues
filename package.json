@@ -3,10 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@emotion/react": "^11.11.1",
-    "@emotion/styled": "^11.11.0",
-    "@mui/icons-material": "^5.14.9",
-    "@mui/material": "^5.14.10",
+    "@mui/icons-material": "^5.15.4",
+    "@mui/material": "^5.15.4",
     "@rjsf/core": "5.16.1",
     "@rjsf/mui": "5.16.1",
     "@rjsf/utils": "5.16.1",
@@ -33,7 +31,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "postinstall": "copy-folder local_node_modules/@rjsf/validator-ajv8/ node_modules/@rjsf/validator-ajv8/"
+    "postinstall": "copy-folder local_node_modules/@rjsf/core/ node_modules/@rjsf/core/ && copy-folder local_node_modules/@rjsf/validator-ajv8/ node_modules/@rjsf/validator-ajv8/" 
   },
   "eslintConfig": {
     "extends": [

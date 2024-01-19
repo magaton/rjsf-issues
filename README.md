@@ -1,13 +1,8 @@
 # rjsf-issues
 Issues faced while using rjsf
 
-1. compileSchemaValidators is not a function
-TypeError: compileSchemaValidators is not a function
-    at ./src/components/DynamicFormComponent.tsx 
-
-2. After I changed import to:
-
-import { compileSchemaValidatorsCode } from '@rjsf/validator-ajv8/lib/compileSchemaValidators';
-
-I am getting:
-Module not found: Error: Can't resolve 'fs' in '/Users/magaton/Projects/rjsf-issues/node_modules/@rjsf/validator-ajv8/lib'
+- execute `npm install` followed by `npm start`
+- app is using locally built `@rjfs/core` and `@rjfs/validator-ajv8` 
+- `validator.ts` is changed so it doesn't validate rootSchema on each render
+- console logs are added to identify the problem
+- Poor performance when using `allOf`, since subschemas in `allOf` are validating multiple times for each render, no matter if the controlling field is changed or not.

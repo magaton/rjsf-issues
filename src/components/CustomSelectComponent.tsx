@@ -6,45 +6,17 @@ import Grid from "@mui/material/Grid";
 
 export const CustomSelect: FC<WidgetProps> = ({ options, formContext, registry, ...props }) => {
   const { SelectWidget } = registry.widgets;
-  const [isEdited, setIsEdited] = useState<boolean>(false);
 
-  let enumOptions = useMemo(() => {
-    if (isArray(options.dependsOn) && !isEmpty(options.dependsOn)) {
-      if (!isNil(options.pathToReplaceableValue) && !isEmpty(options.pathToReplaceableValue)) {
-        const replaceableValue = get(formContext.formData, options.pathToReplaceableValue, "");
-        const returnedFormData = options.dependsOn.map((path) => get(formContext.formData, replace(path as string, "{replaceableValue}", replaceableValue), []));
-        return intersection(...returnedFormData);
-      }
-      const returnedFormData = options.dependsOn.map((path) => get(formContext.formData, path, []));
-      return intersection(...returnedFormData);
-    }
-
-    if (!isNil(options.pathToReplaceableValue) && !isEmpty(options.pathToReplaceableValue)) {
-      const replaceableValue = get(formContext.formData, options.pathToReplaceableValue, "");
-      return get(formContext.formData, replace(options.dependsOn as string, "{replaceableValue}", replaceableValue), []);
-    }
-    return get(formContext.formData, options.dependsOn, []);
-  }, [formContext.formData, options.dependsOn, options.pathToReplaceableValue]);
-
-  useEffect(() => {
-    if (!!options.setAllOptionsByDefault && !isEdited && !isEmpty(formContext.formData)) {
-      const fieldData = get(formContext.formData, FormsUtility.transformIdToPath(props.id));
-      let newFormData = formContext.formData;
-      set(newFormData, FormsUtility.transformIdToPath(props.id), isNil(fieldData) || isEmpty(fieldData) ? enumOptions : fieldData);
-      formContext.setFormData({ ...newFormData });
-
-      if (!isEmpty(enumOptions)) {
-        setIsEdited(true);
-      }
-    }
-  }, [enumOptions, formContext, isEdited, options.setAllOptionsByDefault, props.id]);
-
-  if (!enumOptions) {
-    return null;
+  let enumOptions = [];
+  if (isArray(options.dependsOn) && !isEmpty(options.dependsOn)) {
+    const returnedFormData = options.dependsOn.map((path) => get(formContext.formData, path, []));
+    enumOptions = intersection(...returnedFormData);
   }
+  
+  enumOptions = get(formContext.formData, options.dependsOn, []);
 
   const customOptions = { ...options, enumOptions: FormsUtility.getFilterOptions(enumOptions) };
-
+  console.info("@@@@@ CustomSelect for field: %s, customOptions: %s", props.id, JSON.stringify(customOptions))
   return (
     <Grid item container sx={{ all: 'inherit' }}>
       <SelectWidget

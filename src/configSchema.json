@@ -89,7 +89,8 @@
             "oneOf": [
                 {
                     "type": "string",
-                    "enum": [""
+                    "enum": [
+                        ""
                     ],
                     "title": "Select the compensation plan"
                 },
@@ -222,9 +223,9 @@
             "description": "Specify volume type",
             "type": "string",
             "enum": [
-              "qv",
-              "cv",
-              "value"
+                "qv",
+                "cv",
+                "value"
             ]
         }
     },
@@ -237,7 +238,9 @@
             "title": "Compensation Plan",
             "description": "Specify Compensation Plan Type",
             "type": "object",
-            "required": ["type"],
+            "required": [
+                "type"
+            ],
             "properties": {
                 "type": {
                     "$ref": "#/definitions/compensationPlanType"
@@ -416,12 +419,12 @@
                                         }
                                     ]
                                 },
-                                "$isExchangeRateAuto":{
+                                "$isExchangeRateAuto": {
                                     "type": "string"
                                 }
                             },
-                            "dependencies":{
-                                "$isExchangeRateAuto":{
+                            "dependencies": {
+                                "$isExchangeRateAuto": {
                                     "properties": {
                                         "exchangeRateRefreshFrequency": {
                                             "$ref": "#/definitions/exchangeRateRefreshFrequency"
@@ -472,35 +475,31 @@
                     "maximum": 30
                 }
             },
-            "allOf": [
-                {
-                    "if": {
-                        "properties": {
-                            "types": {
-                                "contains": {
-                                    "const": "Week"
-                                }
-                            }
-                        }
-                    },
-                    "then": {
-                        "required": [
-                            "weekStarts"
-                        ],
-                        "properties": {
-                            "weekStarts": {
-                                "title": "Week starts",
-                                "type": "string",
-                                "enum": [
-                                    "Saturday",
-                                    "Sunday",
-                                    "Monday"
-                                ]
-                            }
+            "if": {
+                "properties": {
+                    "types": {
+                        "contains": {
+                            "const": "Week"
                         }
                     }
                 }
-            ]
+            },
+            "then": {
+                "required": [
+                    "weekStarts"
+                ],
+                "properties": {
+                    "weekStarts": {
+                        "title": "Week starts",
+                        "type": "string",
+                        "enum": [
+                            "Saturday",
+                            "Sunday",
+                            "Monday"
+                        ]
+                    }
+                }
+            }
         },
         "client": {
             "title": "Client",
@@ -616,8 +615,8 @@
                     ]
                 }
             },
-            "dependencies":{
-                "$isCompensationPlanInfluencerMarketing":{
+            "dependencies": {
+                "$isCompensationPlanInfluencerMarketing": {
                     "required": [
                         "types"
                     ],
@@ -637,7 +636,7 @@
                         }
                     }
                 },
-                "$isCompensationPlanMLM":{
+                "$isCompensationPlanMLM": {
                     "required": [
                         "types"
                     ],
@@ -659,7 +658,6 @@
                     }
                 }
             }
-  
         },
         "kpi": {
             "title": "KPIs / Reporting",
@@ -678,4 +676,4 @@
             }
         }
     }
-  }
+}
